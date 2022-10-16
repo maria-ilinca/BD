@@ -1,0 +1,384 @@
+----------------------------------------Proiect BD-----------------------
+
+------------------------------------------EVENIMENT-------------------------------------------
+CREATE TABLE [EVENIMENT] (
+	id_eveniment int CONSTRAINT PKEY_EVENIMENT PRIMARY KEY,
+	dataeveniment DATE CONSTRAINT dataeveniment_const NOT NULL,
+);
+
+
+INSERT INTO EVENIMENT
+VALUES(1, convert(DATETIME, '5-11-2019',103));    
+
+INSERT INTO EVENIMENT
+VALUES(2,convert(DATETIME, '4-11-2020', 103)); 
+
+INSERT INTO EVENIMENT
+VALUES(3,convert(DATETIME, '30-10-2021', 103));
+
+INSERT INTO EVENIMENT
+VALUES(4,convert(DATETIME,'5-11-2022', 103)); 
+
+INSERT INTO EVENIMENT
+VALUES(5,convert(DATETIME, '14-07-2010', 103));  
+SELECT *FROM [EVENIMENT]
+
+------------------------------------------FIRMA-------------------------------------------
+
+CREATE TABLE [FIRMA] (
+	id_firma int IDENTITY(1,1)  NOT NULL,
+	NumeFirma varchar(255) NOT NULL,
+	MailFirma varchar(255),
+	NumarTelefonFirma int NOT NULL,
+	NumeTemaPropusa varchar(255) NOT NULL,
+  CONSTRAINT [PK_FIRMA] PRIMARY KEY CLUSTERED
+  (
+  [id_firma] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+)
+
+
+INSERT INTO Firma(NumeFirma, MailFirma, NumarTelefonFirma, NumeTemaPropusa)
+VALUES ('Softbinator','contact@softbinator.com','0757404781','AI in Health')
+INSERT INTO Firma( NumeFirma, MailFirma, NumarTelefonFirma, NumeTemaPropusa)
+VALUES ('Bitdefender','office@bitdefender','0212063470','Application simulating an Operating System')
+INSERT INTO Firma(NumeFirma, MailFirma, NumarTelefonFirma, NumeTemaPropusa)
+VALUES ('Adobe','NULL','0314133776','Mini-Creative Cloud Application')
+INSERT INTO Firma( NumeFirma, MailFirma, NumarTelefonFirma, NumeTemaPropusa)
+VALUES ('Luxoft','office@luxoft','0212036600','Capture the flag')
+INSERT INTO Firma( NumeFirma, MailFirma, NumarTelefonFirma, NumeTemaPropusa)
+VALUES ('Accenture','NULL','1571434500','The art of AI-application')
+
+SELECT *
+FROM [FIRMA];
+
+------------------------------------------LOCATIE-------------------------------------------
+
+CREATE TABLE [LOCATIE] (
+	id_locatie int NOT NULL,
+	NumeLocatie varchar(255) NOT NULL,
+      ContactLocatie varchar(255) NOT NULL,
+	NumarCamereDisponibile int NOT NULL,
+  CONSTRAINT [PK_LOCATIE] PRIMARY KEY CLUSTERED
+  (
+  [id_locatie] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+
+
+
+INSERT INTO Locatie(id_locatie,NumeLocatie,ContactLocatie, NumarCamereDisponibile)
+VALUES (10,'Impact Hub Universitate','+40 372 893 889',5)
+INSERT INTO Locatie( id_locatie,NumeLocatie,ContactLocatie, NumarCamereDisponibile)
+VALUES (11,'Impact Hub Floreasca','+40 372 893 889',6)
+INSERT INTO Locatie(id_locatie,NumeLocatie,ContactLocatie, NumarCamereDisponibile)
+VALUES (12,'Romexpo','+40 21 202 5700',6)
+INSERT INTO Locatie( id_locatie,NumeLocatie,ContactLocatie, NumarCamereDisponibile)
+VALUES (13,'aSpace Baneasa', 'office@aspace.ro', 6)
+INSERT INTO Locatie( id_locatie,NumeLocatie,ContactLocatie, NumarCamereDisponibile)
+VALUES (14,'aSpace Floreasca', 'office@aspace.ro', 6)
+
+SELECT *
+FROM [LOCATIE];
+
+------------------------------------------PROMOVARE-------------------------------------------
+CREATE TABLE [PROMOVARE] (
+	id_promovare int NOT NULL,
+	id_eveniment int FOREIGN KEY REFERENCES Eveniment(id),
+	ReteaSocializare varchar(255) NOT NULL,
+	DataPromovare datetime NOT NULL,
+  CONSTRAINT [PK_PROMOVARE] PRIMARY KEY CLUSTERED
+  (
+  [id_promovare] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+)
+
+
+INSERT INTO Promovare(id_promovare, id_eveniment, ReteaSocializare,DataPromovare)
+VALUES (1,1,'Facebook',convert(DATETIME, '14-09-2022', 103))
+INSERT INTO Promovare(id_promovare, id_eveniment, ReteaSocializare,DataPromovare)
+VALUES (2,1,'Instagram',convert(DATETIME, '15-09-2022', 103))
+INSERT INTO Promovare(id_promovare, id_eveniment, ReteaSocializare,DataPromovare)
+VALUES (3,1,'TikTok',convert(DATETIME, '20-09-2022', 103))
+INSERT INTO Promovare(id_promovare, id_eveniment, ReteaSocializare,DataPromovare)
+VALUES (4,1,'Site-ASMI',convert(DATETIME, '26-09-2022', 103))
+INSERT INTO Promovare(id_promovare, id_eveniment, ReteaSocializare,DataPromovare)
+VALUES (5,1,'Site-facultate',convert(DATETIME, '27-09-2022', 103))
+
+
+SELECT *
+FROM [PROMOVARE];
+
+------------------------------------------VOLUNTAR-------------------------------------------
+CREATE TABLE [VOLUNTAR] (
+	id_voluntar int IDENTITY(1,2) NOT NULL,
+      ContactVoluntar varchar(255) NOT NULL,
+	NumeVoluntar varchar(255) NOT NULL,
+	TuraVoluntar varchar(255) NOT NULL,
+  CONSTRAINT [PK_VOLUNTAR] PRIMARY KEY CLUSTERED
+  (
+  [id_voluntar] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('ionel.popescu@asmi.ro', 'Ionel Popescu', 1)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('maria.ionescu@asmi.ro', 'Maria Ionescu',1)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('andreea.gheorghe@asmi.ro', 'Andreea Gheorghe',2)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('teodora.marcu@asmi.ro', 'Teodora Marcu', 2)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('luca.andrei@asmi.ro', 'Luca Andrei', 1)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('mihai.alexandru@asmi.ro', 'Mihai Alexandru',1)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('anca.marinescu@asmi.ro', 'Anca Marinescu', 2)
+INSERT INTO Voluntar(ContactVoluntar,NumeVoluntar,TuraVoluntar)
+VALUES ('mihai.constatin@asmi.ro', 'Mihai Constantin', 2)
+
+SELECT *
+FROM [VOLUNTAR];
+
+------------------------------------------SPONSOR-------------------------------------------
+CREATE TABLE [SPONSOR] (
+	id_sponsor int NOT NULL,
+	NumeSponsor varchar(255) NOT NULL,
+	TipProduse	varchar(255) NOT NULL,
+	NumarProduse int NOT NULL,
+  CONSTRAINT [PK_SPONSOR] PRIMARY KEY CLUSTERED
+  (
+  [id_sponsor] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+
+CREATE SEQUENCE sequence_1
+start with 2
+increment by 2
+minvalue 0
+maxvalue 100
+cycle;
+
+INSERT INTO Sponsor VALUES (CAST(NEXT VALUE FOR sequence_1 AS int) ,'TrentaPizza', 'Pizza', 100);
+INSERT INTO Sponsor VALUES (CAST(NEXT VALUE FOR sequence_1 AS int),'Sloop', 'Suc fresh', 200);
+INSERT INTO Sponsor VALUES (CAST(NEXT VALUE FOR sequence_1 AS int),'Red Bull', 'Energizant', 200);
+INSERT INTO Sponsor VALUES (CAST(NEXT VALUE FOR sequence_1 AS int),'Fru Fru', 'Salata', 100);
+INSERT INTO Sponsor VALUES (CAST(NEXT VALUE FOR sequence_1 AS int),'Chio', 'Snacksuri', 150);
+INSERT INTO Sponsor VALUES (CAST(NEXT VALUE FOR sequence_1 AS int),'Aqua Carpatica', 'Apa', 400);
+
+SELECT *
+FROM [SPONSOR];
+
+
+------------------------------------------MENTOR-------------------------------------------
+CREATE TABLE [Mentor] (
+	id_mentor int NOT NULL,
+	NumeMentor varchar(255) NOT NULL,
+	ContactMentor varchar(255) NOT NULL,
+  CONSTRAINT [PK_MENTOR] PRIMARY KEY CLUSTERED
+  (
+  [id_mentor] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+CREATE SEQUENCE sequence_2
+start with 1
+increment by 3
+minvalue 0
+maxvalue 100
+cycle;
+
+INSERT INTO Mentor VALUES(CAST(NEXT VALUE FOR sequence_2 AS int),'Daniel Ilinca','https://ro.linkedin.com/in/danielilinca')
+INSERT INTO Mentor VALUES(CAST(NEXT VALUE FOR sequence_2 AS int),'Rares Carligeanu','https://ro.linkedin.com/in/rares-cirligeanu-b34471b7')
+INSERT INTO Mentor VALUES(CAST(NEXT VALUE FOR sequence_2 AS int),'Florin Talpes','https://ro.linkedin.com/in/florin-talpes-a2508a4')
+INSERT INTO Mentor VALUES(CAST(NEXT VALUE FOR sequence_2 AS int),'Anca Marcu ','https://ro.linkedin.com/in/anca-marcu-b9693540')
+INSERT INTO Mentor VALUES(CAST(NEXT VALUE FOR sequence_2 AS int),'Catalin Cosoi','https://ro.linkedin.com › in › catalincosoi')
+SELECT *
+FROM [MENTOR];
+
+------------------------------------------MATERIAL-------------------------------------------
+CREATE TABLE [MATERIAL] (
+   id_promovare int FOREIGN KEY REFERENCES Promovare(id_promovare),
+   TipMaterial varchar(255) NOT NULL, 
+   NumarMaterial	int NOT NULL
+   CONSTRAINT [PK_MATERIAL] PRIMARY KEY CLUSTERED
+  (
+  [id_promovare] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+INSERT INTO Material VALUES(1, 'Afise', 10)
+INSERT INTO Material VALUES(2, 'Flyere',100)
+INSERT INTO Material VALUES(3, 'Pixuri', 100)
+INSERT INTO Material VALUES (4, 'Tricouri',150)
+INSERT INTO Material VALUES(5, 'Cani',50)
+
+select *
+from MATERIAL;
+
+
+------------------------------------------FIRMAECHIPAMAPPING-------------------------------------------
+CREATE TABLE [FIRMAECHIPAMAPPING] (
+       id_firma int CONSTRAINT pk_f_firma REFERENCES Firma(id_firma),
+      id_echipa int CONSTRAINT pk_c_echipa REFERENCES Echipa(id_echipa),
+
+     
+)
+
+INSERT INTO FirmaEchipaMapping VALUES (1,1)
+INSERT INTO FirmaEchipaMapping VALUES (1,2)
+INSERT INTO FirmaEchipaMapping VALUES (5,1)
+INSERT INTO FirmaEchipaMapping VALUES (4,4)
+INSERT INTO FirmaEchipaMapping VALUES (4,3)
+INSERT INTO FirmaEchipaMapping VALUES (5,2)
+INSERT INTO FirmaEchipaMapping VALUES (2,5)
+INSERT INTO FirmaEchipaMapping VALUES (3,3)
+INSERT INTO FirmaEchipaMapping VALUES (3,4)
+INSERT INTO FirmaEchipaMapping VALUES (2,4)
+
+select *
+from FIRMAECHIPAMAPPING;
+
+------------------------------------------ECHIPA-------------------------------------------
+CREATE TABLE [ECHIPA] (
+	id_echipa int IDENTITY(1,1) NOT NULL,
+	Nume_echipa varchar(255) NOT NULL,
+      NumarParticipanti	int NOT NULL
+
+  CONSTRAINT [PK_ECHIPA] PRIMARY KEY CLUSTERED
+  (
+  [id_echipa] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+INSERT INTO Echipa VALUES ('console.log(Win)',3)
+INSERT INTO Echipa VALUES ('NullTeam',4)
+INSERT INTO Echipa VALUES ('hackU',3)
+INSERT INTO Echipa VALUES ('FANTASTIC 4',4)
+INSERT INTO Echipa VALUES ('Computer Mechanics',3)
+INSERT INTO Echipa VALUES ('Spark Hex',4)
+
+
+select *
+from ECHIPA;
+
+------------------------------------------PARTICIPANT-------------------------------------------
+CREATE TABLE [PARTICIPANT] (
+	id_echipa int FOREIGN KEY REFERENCES Echipa(id_echipa),
+	id_participant int NOT NULL,
+	NumeParticipant varchar(255) NOT NULL,
+	Facultate varchar(255) NOT NULL,
+	Domeniu varchar(255) NOT NULL,
+	AnStudiu int NOT NULL,
+  CONSTRAINT [PK_PARTICIPANT] PRIMARY KEY CLUSTERED
+  (
+  [id_participant] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+) 
+
+INSERT INTO Participant VALUES(1,1,'Anghel Maria','Facultatea de Matematica si Informatica','Informatica',1)
+INSERT INTO Participant VALUES(1,2,'Popescu Ana','Facultatea de Matematica si Informatica','CTI',1)
+INSERT INTO Participant VALUES(2,3,'Andrei Cristiana','Facultatea de Matematica si Informatica','CTI',2)
+INSERT INTO Participant VALUES(2,4,'Luca Octavian','Facultatea de Automatica si Calculatoare','CTI',2)
+INSERT INTO Participant VALUES(3,5,'Mihai Florin','Facultatea de Automatica si Calculatoare','IS',1)
+INSERT INTO Participant VALUES(3,6,'Preda Ioana','Facultatea de Matematica si Informatica','Infomatica',1)
+INSERT INTO Participant VALUES(4,7,'Sasu Mihai','Facultatea de Automatica si Calculatoare', 'CTI',1)
+INSERT INTO Participant VALUES(4,8,'Ionescu Alin','Facultatea de Matematica si Informatica','Informatica',2)
+
+select *
+from PARTICIPANT;
+
+
+------------------------------------------PREMIU-------------------------------------------
+CREATE TABLE [PREMIU] (
+	id_premiu int NOT NULL,
+	id_firma int FOREIGN KEY REFERENCES Firma(id_firma),
+	Tip_premiu varchar(255) NOT NULL,
+	SumaPremiu varchar(255) NOT NULL,
+
+  CONSTRAINT [PK_PREMIU] PRIMARY KEY CLUSTERED
+  (
+  [id_premiu] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+INSERT INTO Premiu VALUES(1,1,'Cea mai buna idee','2000 lei')
+INSERT INTO Premiu VALUES(2,1,'Cea mai rapida aplicatie','3000 lei')
+INSERT INTO Premiu VALUES(3,2,'Cea mai securizata aplicatie','3500 lei')
+INSERT INTO Premiu VALUES(4,3,'Cel mai clean code','2000 lei')
+INSERT INTO Premiu VALUES(5,4,'Cea mai buna aplicatie','3000 lei')
+INSERT INTO Premiu VALUES(6,5,'Cea mai complexa implementare','3000 lei')
+
+
+
+select *
+from PREMIU;
+
+
+------------------------------------------PREMIUECHIPAMAPPING-------------------------------------------
+CREATE TABLE [PREMIUECHIPAMAPPING] (
+	id_premiu int CONSTRAINT pk_p_premiu REFERENCES Premiu(id_premiu),
+      id_echipa int CONSTRAINT pk_e_echipa REFERENCES Echipa(id_echipa),
+
+  )
+INSERT INTO PremiuEchipaMapping VALUES (1,2)
+INSERT INTO PremiuEchipaMapping VALUES (3,2)
+INSERT INTO PremiuEchipaMapping VALUES (1,3)
+INSERT INTO PremiuEchipaMapping VALUES (4,5)
+INSERT INTO PremiuEchipaMapping VALUES (2,3)
+INSERT INTO PremiuEchipaMapping VALUES (4,1)
+INSERT INTO PremiuEchipaMapping VALUES (5,1)
+INSERT INTO PremiuEchipaMapping VALUES (2,4)
+INSERT INTO PremiuEchipaMapping VALUES (3,4)
+INSERT INTO PremiuEchipaMapping VALUES (6,3)
+
+SELECT*
+FROM PREMIUECHIPAMAPPING
+
+------------------------------------------TRAININGFIRMA-------------------------------------------
+CREATE TABLE [TRAININGFIRMA](
+ id_firma int FOREIGN KEY REFERENCES Firma(id_firma),
+ NumeTraining varchar(255) NOT NULL, 
+ DataTraining datetime NOT NULL,	
+   
+   CONSTRAINT [PK_TRAININGFIRMA] PRIMARY KEY CLUSTERED
+  (
+  [id_firma] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+
+INSERT INTO TRAININGFIRMA VALUES(2,'CybersecurityTools',convert(DATETIME, '26-09-2022', 103))
+INSERT INTO TRAININGFIRMA VALUES(1,'New Software Design',convert(DATETIME, '27-09-2022', 103))
+INSERT INTO TRAININGFIRMA VALUES(3,'Design -Creative Tools',convert(DATETIME, '28-09-2022', 103))
+INSERT INTO TRAININGFIRMA VALUES(4,'Secured-App',convert(DATETIME, '29-09-2022', 103))
+INSERT INTO TRAININGFIRMA VALUES(5,'AI & Modern World',convert(DATETIME, '30-09-2022', 103))
+
+select *
+from TRAININGFIRMA;
+
+------------------------------------------PACHETFIRMA-------------------------------------------
+CREATE TABLE [PACHETFIRMA](
+  id_firma int FOREIGN KEY REFERENCES Firma(id_firma),
+  id_pachet int NOT NULL,
+  facilitati varchar(255) NOT NULL,
+  pret int NOT NULL, 
+
+   CONSTRAINT [PK_PACHETFIRMA] PRIMARY KEY CLUSTERED
+  (
+  [id_pachet] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+INSERT INTO PACHETFIRMA VALUES(1,1,'număr mai mic de mentori, promovare doar pe retele de socializare',3000)
+INSERT INTO PACHETFIRMA VALUES(2,2,'număr maxim de mentori, promovare pe retele de socializare si fizic',5000)
+INSERT INTO PACHETFIRMA VALUES(3,3,'număr mai mic de mentori, promovare doar pe retele de socializare',3000)
+INSERT INTO PACHETFIRMA VALUES(4,4,'număr mai mic de mentori, promovare doar pe retele de socializare',3000)
+INSERT INTO PACHETFIRMA VALUES(5,5,'număr maxim de mentori, promovare pe retele de socializare si fizic',5000)
+
+select *
+from PACHETFIRMA;

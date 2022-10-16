@@ -1,0 +1,185 @@
+--CELE 5 CERERI--
+
+--1. --1. Să se afișeze tipul materialului de promovare și cantitatea acestuia, care a crescut cu 50% pentru evenimentul din 2022. În această cerere am folosit NVL, filtrare  la nivel de linii, subcereri nesincronizate, funcții care lucrează cu date(DATEPART și transformarea în string).
+
+
+select TipMaterial,  COALESCE(NumarMaterial+0.5*NumarMaterial,0) AS NumarMaterialFinal
+from MATERIAL
+WHERE id_promovare IN
+SELECT id_promovare from PROMOVARE where id_eveniment=(SELECT id_eveniment from EVENIMENT where DATEPART (year,dataeveniment)=2022));
+SELECT CAST(dataeveniment AS varchar(20)) AS 'New String datatype'
+FROM EVENIMENT
+
+--2. Să se afișeze numele echipelor și numărul participanții care câștigă premiul în valoare de 3500 de lei. 
+--Dacă acesta va fi mai mic decât 4, vom afișa că echipa este incompletă, iar dacă este 4, atunci echipa e completă.
+--Pentru această cerere am folosit funcții pe șiruri, case, filtrare  la nivel de linii, subcereri nesincronizat
+
+Select e.Nume_echipa, e.NumarParticipanti, 
+case when e.NumarParticipanti<4 then 'Echipa cu mai putini de 4 membri'
+when e.NumarParticipanti=4  then 'Echipa cu 4 membri'
+end 
+as MembriEchipa
+FROM ECHIPA e
+WHERE id_echipa in
+(SELECT id_echipa from PREMIUECHIPAMAPPING where id_premiu=(SELECT id_premiu from PREMIU where CAST(LEFT(SumaPremiu, 4) AS int)=3500)
+
+--3. Să se afișeze numele trainingurilor, ale firmelor care le țin și ale echipelor participante, grupate întâi după numele firmei, apoi al echipei și în final al trainingului, iar funcția count ne asigură că fiecare echipă participă la traininguri, dacă se află la o dată diferită.
+--Am folosit join pe 4 tabele, grupări de date, funcții grup și clauza with.
+
+with TABLETEMP as(SELECT FIRMA.NumeFirma FROM FIRMA)
+SELECT count(*) as TotalTraining,TRAININGFIRMA.NumeTraining, 
+	   ECHIPA.Nume_echipa
+FROM TRAININGFIRMA
+INNER JOIN FIRMA ON TRAININGFIRMA.id_firma = FIRMA.id_firma
+INNER JOIN FIRMAECHIPAMAPPING ON FIRMA.id_firma = FIRMAECHIPAMAPPING.id_firma
+INNER JOIN ECHIPA ON FIRMAECHIPAMAPPING.id_echipa= ECHIPA.id_echipa
+GROUP BY FIRMA.NumeFirma,ECHIPA.Nume_echipa, TRAININGFIRMA.NumeTraining
+
+
+--4. Presupunem ca vrem sa aflam: Care este numele, domeniul si anul de studii ale persoanelor care au facut parte din echipa 
+--care a castigat al doilea premiu, deoarece au plecat inainte de premiere. Pentru a afla asta, vom folosi in query o cerere sincronizata pe 3 tabele, functia concat si functia care transforma un intreg in string.
+SELECT CONCAT(CONCAT(p.Facultate,' '),p.Domeniu)+STR(p.AnStudiu) as "Facultate si Domeniu",p.id_echipa as "Echipa", p.NumeParticipant as "Nume"
+from PARTICIPANT p
+where p.id_participant in (select id_participant
+                        from PARTICIPANT
+                        where id_echipa > (select avg(id_echipa)
+                                        from Echipa))
+        and p.id_participant in(select id_participant
+                        from PARTICIPANT
+                        where id_echipa in (select id_echipa
+                                                        from PREMIUECHIPAMAPPING
+                                                        where id_premiu > 2
+                                                        )
+                         );
+
+
+--5.
+--Voluntarii aflati intr-o tura afla ca a sosit un sponsor, iar unul dintre ei vede produsele si le transmite celorlati printr-o codificare.
+--Astfel, fiecare produs va primi o noua denumire si vor fi date participantilor in ordine descrescatoare a numarului lor. 
+--Pentru acest lucru vom folosi ordonarea produselor, decodificarea si o functie de grup.
+
+SELECT NumarProduse, NumeSponsor,
+CASE TipProduse
+    WHEN 'Pizza' THEN 'P'
+	WHEN  'Suc fresh' THEN 'S'
+	WHEN  'Energizant' THEN 'E'
+	WHEN  'Apa' THEN 'A'
+	WHEN  'Salata' THEN 'F-F'
+	WHEN 'Snacksuri' THEN 'SK'
+    ELSE 'Alt produs'
+END
+FROM SPONSOR
+ORDER BY NumarProduse DESC;
+
+SELECT SUM (NumarProduse) AS "Numar total produse"
+FROM SPONSOR
+
+--ex12.
+--Două firme partenere (cele cu id par) doresc să mărească suma investită într-un pachet cu 20%. Să se construiască o cerere care permite acest lucru.
+ update PACHETFIRMA
+set pret = pret+0.2*pret
+where id_pachet in (select id_pachet from PACHETFIRMA
+where id_firma in (select id_firma from FIRMA where (id_firma%2) <1));
+
+--Pentru că în anii 2021 și 2020 evenimentul s-a desfășurat în format online, se dorește alcătuirea unei cereri care să reducă la jumătate numărul materialelor de promovare. 
+
+update MATERIAL
+set NumarMaterial=NumarMaterial-0.5*NumarMaterial
+where id_promovare in (select id_promovare from PROMOVARE
+where id_eveniment in(select id_eveniment from EVENIMENT where DATEPART (year,dataeveniment)=2021 OR DATEPART(year,dataeveniment)=2020 ));
+
+--Să se elimine din materialele de promovare Cănile.
+select*from MATERIAL;
+
+delete from MATERIAL
+WHERE TipMaterial = 'Cani'
+
+select*from MATERIAL;
+
+
+--ex13
+CREATE SEQUENCE sequence_1
+start with 2
+increment by 2
+minvalue 0
+maxvalue 100
+cycle;
+
+
+CREATE SEQUENCE sequence_2
+start with 1
+increment by 3
+minvalue 0
+maxvalue 100
+cycle;
+
+--ex14
+CREATE VIEW 
+VIEW_TRAININGFIRMA_FIRMA AS
+( 
+  SELECT DISTINCT
+      T.id_firma,
+      T.NumeTraining,
+      F.NumeFirma,
+      F.NumeTemaPropusa
+      
+ FROM TRAININGFIRMA T
+ JOIN FIRMA F on T.id_firma = F.id_firma
+ WHERE (LEN(T.NumeTraining) > 10)
+)
+
+--Operatie permisă
+SELECT* FROM VIEW_TRAININGFIRMA_FIRMA ORDER BY id_firma
+
+--Operatie nepermisa
+DELETE FROM VIEW_TRAININGFIRMA_FIRMA
+WHERE id_firma = 2
+
+--ex15
+CREATE INDEX ix_participant 
+ON PARTICIPANT(Facultate, Domeniu);
+SELECT 
+    NumeParticipant, 
+    Facultate, 
+    Domeniu
+FROM 
+    PARTICIPANT
+WHERE 
+    Facultate = 'Facultatea de Matematica si Informatica' AND 
+    Domeniu = 'Informatica';
+
+--ex16
+--outer join intre 4 tabele
+
+SELECT PREMIU.Tip_premiu, PARTICIPANT.NumeParticipant,
+	   ECHIPA.Nume_echipa
+FROM PARTICIPANT
+LEFT OUTER JOIN ECHIPA ON PARTICIPANT.id_echipa = ECHIPA.id_echipa
+LEFT OUTER JOIN PREMIUECHIPAMAPPING ON ECHIPA.id_echipa = PREMIUECHIPAMAPPING.id_echipa
+FULL OUTER JOIN PREMIU ON PREMIUECHIPAMAPPING.id_premiu= PREMIU.id_premiu
+GROUP BY ECHIPA.Nume_echipa, PREMIU.Tip_premiu,PARTICIPANT.NumeParticipant
+
+
+--Să se afișeze id-ul echipelor  și numele celor care au câștigat un premiu cel puțin la fel de bun ca echipa cu id-ul 4.
+
+
+SELECT e.id_echipa, Nume_echipa
+
+FROM ECHIPA e JOIN PREMIUECHIPAMAPPING pe ON (e.id_echipa = pe.id_echipa),
+ PREMIUECHIPAMAPPING JOIN PREMIU p ON (PREMIUECHIPAMAPPING.id_premiu= p.id_premiu)
+
+WHERE p.SumaPremiu > '3000 lei' AND e.id_echipa!=4
+ORDER BY e.id_echipa
+
+--Să se afișeze id-ul, numele participanților care au obținut premiul de 2000 lei.
+
+SELECT DISTINCT c.NumeParticipant, c.id_participant
+
+FROM PARTICIPANT c JOIN ECHIPA e ON (e.id_echipa = c.id_echipa),
+ ECHIPA JOIN PREMIUECHIPAMAPPING pe ON (ECHIPA.id_echipa = pe.id_echipa),
+ PREMIUECHIPAMAPPING JOIN PREMIU p ON (PREMIUECHIPAMAPPING.id_premiu= p.id_premiu)
+
+WHERE p.SumaPremiu = '2000 lei'
+ORDER BY c.id_participant
+
+
